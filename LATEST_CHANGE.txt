@@ -1,0 +1,11 @@
+Standardized remote names and layout (flat `ReplicatedStorage.Remotes`) and added safe `RemotesInit.Init()` creating canonical events. Enforced loading shared modules only from `ReplicatedStorage.Shared` (replaced all `script.shared`/`PlayerScripts.shared` patterns). Replaced foldered remotes (Shop/Combat/Round/Ability) with flat event names (AttackRequest, EconomyUpdate, MatchStateUpdate, ShopPurchaseRequest, ShopEquipRequest, ShopUpdate, AbilityRequest, AbilityFx). Added `SanityCheckService` to warn about missing `Shared` modules or specific remotes at server startup. Validated `default.project.json` (no JSON errors found). Updated callers: `RoundService`, `ShopService`, `EconomyService`, `CombatService`, `AbilityService`, `UIController`, `ShopController`, `InputController`. RemotesInit now prints `[RemotesInit] ready` when installed.
+
+Added MapService to auto-provision a dev-friendly placeholder map (Lobby, Chairs, Seats, ProximityPrompts, Arena, RingSpawns). Replaced hard WaitForChilds in `RoundService` with `MapService:GetOrCreateMap()` to avoid infinite yields and auto-create missing parts (warning printed when auto-created). Initialized `MapService` early in `init.server.luau`.
+
+Upgraded HUD to a modern "glass" design and added smooth tweens (money pulse, role badge color change), better layout and responsiveness (`src/client/UIController.client.luau`).
+
+Polished Shop UI into a modal with tabs (Weapons/Powers/Upgrades), hover effects, toasts, badges, and improved layout (`src/client/ShopController.client.luau`).
+
+Map improvements: added `MapService` and upgraded it to auto-create a larger dev-friendly map at `Workspace/Map` (Lobby/Seats/SeatPrompts/Arena/Ring/RingSpawns with 16 seats, large platforms, 300 stud separation). RoundService now safely requires and uses `MapService:GetOrCreateMap()` with guarded fallbacks to avoid infinite yields (`src/server/services/MapService.luau`, `src/server/services/RoundService.luau`).
+
+Other stability improvements: careful defensive WaitForChild timeouts, SanityCheck ensures remotes and shared modules exist on startup. All changes are Roblox-native and require no external assets.
